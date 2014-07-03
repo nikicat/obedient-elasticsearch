@@ -2,8 +2,8 @@ cluster.name: ${ name }
 node:
     name: ${ this.name }-${this.ship.name}
     datacenter: ${ this.ship.datacenter }
-transport.tcp.port: ${ this.ports['peer'] }
-http.port: ${ this.ports['http'] }
+transport.tcp.port: 9300
+http.port: 9200
 network.publish_host: ${ this.ship.fqdn }
 discovery:
     type: com.sonian.elasticsearch.zookeeper.discovery.ZooKeeperDiscoveryModule
@@ -33,4 +33,4 @@ indices:
     recovery.concurrent_streams: 20
     memory.index_buffer_size: 30%
 # Export monitoring data to self
-marvel.agent.exporter.es.hosts: ${ ['{}:{}'.format(c.ship.fqdn, c.ports['http']) for c in containers] }
+marvel.agent.exporter.es.hosts: ${ marvel_hosts }

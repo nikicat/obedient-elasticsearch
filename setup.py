@@ -12,6 +12,6 @@ if __name__ == '__main__':
         platforms='linux',
         packages=['obedient.elasticsearch'],
         namespace_packages=['obedient'],
-        package_data={'obedient.elasticsearch': ['elasticsearch.yml', 'logging.yml', 'mapping.json']},
-        install_requires=['dominator'],
+        package_data={'obedient.elasticsearch': ['elasticsearch.yml', 'logging.yml', 'mapping.json', 'run.sh']},
+        install_requires=['dominator >=2, <3'],
     )
