@@ -43,7 +43,7 @@ MAX_MAP_COUNT=262144
 
 # Define other required variables
 DAEMON=$ES_HOME/bin/elasticsearch
-JAVA_OPTS="-server -showversion \
+export JAVA_OPTS="-server -showversion \
     -Des.default.config=$CONF_FILE \
     -Des.default.path.home=$ES_HOME \
     -Des.default.path.logs=$LOG_DIR \
@@ -53,8 +53,10 @@ JAVA_OPTS="-server -showversion \
     -Dcom.sun.management.jmxremote.authenticate=false \
     -Dcom.sun.management.jmxremote.ssl=false \
     -Dcom.sun.management.jmxremote.local.only=false \
-    -Dcom.sun.management.jmxremote.port=9400 \
-    -Dcom.sun.management.jmxremote.rmi.port=9400 \
+    -Dcom.sun.management.jmxremote.port=$JAVA_RMI_PORT \
+    -Dcom.sun.management.jmxremote.rmi.port=$JAVA_RMI_PORT \
     -Djava.rmi.server.hostname=$JAVA_RMI_SERVER_HOSTNAME"
+
+export ES_CLASSPATH=/etc/elasticsearch/logging.yml
 
 $DAEMON
