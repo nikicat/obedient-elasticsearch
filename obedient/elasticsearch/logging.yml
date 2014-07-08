@@ -12,7 +12,7 @@ logger:
   #index.gateway: DEBUG
 
   # peer shard recovery
-  #indices.recovery: DEBUG
+  indices.recovery: DEBUG
 
   # discovery
   #discovery: TRACE
@@ -27,6 +27,7 @@ additivity:
 appender:
   console:
     type: console
+    Threshold: INFO
     layout:
       type: consolePattern
       conversionPattern: "[%d{ISO8601}][%-5p][%-25c] %m%n"
