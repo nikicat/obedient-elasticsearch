@@ -14,7 +14,7 @@ sonian.elasticsearch.zookeeper:
 zookeeper.root: /${ name }/elasticsearch
 cluster.routing.allocation:
     awareness:
-        force.datacenter.values: ${ sorted(list(set([c.ship.datacenter for c in containers]))) }
+        force.datacenter.values: ${ sorted(list({c.ship.datacenter for c in containers})) }
         attributes: datacenter
     cluster_concurrent_rebalance: 10
     disk.threshold_enabled: True
