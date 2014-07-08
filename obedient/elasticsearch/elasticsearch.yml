@@ -7,7 +7,6 @@ http.port: ${ this.ports.get('http', 9200) }
 network.publish_host: ${ this.ship.fqdn }
 discovery:
     type: com.sonian.elasticsearch.zookeeper.discovery.ZooKeeperDiscoveryModule
-    zen.multicast.enabled: False
 sonian.elasticsearch.zookeeper:
     settings.enabled: False
     client.host: ${ ','.join(['{}:{}'.format(c.ship.fqdn, c.ports['client']) for c in zookeepers]) }
