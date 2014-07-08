@@ -31,5 +31,10 @@ index:
 indices:
     recovery.concurrent_streams: 20
     memory.index_buffer_size: 30%
-# Export monitoring data to self
-marvel.agent.exporter.es.hosts: ${ marvel_hosts }
+
+marvel.agent:
+% if len(marvel_hosts) > 0:
+    exporter.es.hosts: ${ marvel_hosts }
+% else:
+    enabled: false
+% endif
