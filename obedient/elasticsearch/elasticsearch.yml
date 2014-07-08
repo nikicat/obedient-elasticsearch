@@ -1,13 +1,12 @@
 cluster.name: ${ name }
 node:
-    name: ${ this.name }-${this.ship.name}
+    name: ${ this.name }-${ this.ship.name }
     datacenter: ${ this.ship.datacenter }
-transport.tcp.port: ${ this.ports['peer'] }
-http.port: ${ this.ports['http'] }
+transport.tcp.port: ${ this.ports.get('peer', 9300) }
+http.port: ${ this.ports.get('http', 9200) }
 network.publish_host: ${ this.ship.fqdn }
 discovery:
     type: com.sonian.elasticsearch.zookeeper.discovery.ZooKeeperDiscoveryModule
-    zen.multicast.enabled: False
 sonian.elasticsearch.zookeeper:
     settings.enabled: False
     client.host: ${ ','.join(['{}:{}'.format(c.ship.fqdn, c.ports['client']) for c in zookeepers]) }
@@ -15,7 +14,7 @@ sonian.elasticsearch.zookeeper:
 zookeeper.root: /${ name }/elasticsearch
 cluster.routing.allocation:
     awareness:
-        force.datacenter.values: ${ list(set([c.ship.datacenter for c in containers])) }
+        force.datacenter.values: ${ sorted(list({c.ship.datacenter for c in containers})) }
         attributes: datacenter
     cluster_concurrent_rebalance: 10
     disk.threshold_enabled: True
@@ -32,5 +31,10 @@ index:
 indices:
     recovery.concurrent_streams: 20
     memory.index_buffer_size: 30%
-# Export monitoring data to self
-marvel.agent.exporter.es.hosts: ${ ['{}:{}'.format(c.ship.fqdn, c.ports['http']) for c in containers] }
+
+marvel.agent:
+% if len(marvel_hosts) > 0:
+    exporter.es.hosts: ${ marvel_hosts }
+% else:
+    enabled: false
+% endif
