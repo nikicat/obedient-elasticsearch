@@ -42,7 +42,6 @@ CONF_FILE=$CONF_DIR/elasticsearch.yml
 MAX_MAP_COUNT=262144
 
 # Define other required variables
-DAEMON=$ES_HOME/bin/elasticsearch
 export JAVA_OPTS="-server -showversion \
     -Des.default.config=$CONF_FILE \
     -Des.default.path.home=$ES_HOME \
@@ -59,4 +58,4 @@ export JAVA_OPTS="-server -showversion \
 
 export ES_CLASSPATH=/etc/elasticsearch/logging.yml
 
-$DAEMON
+$ES_HOME/bin/elasticsearch
