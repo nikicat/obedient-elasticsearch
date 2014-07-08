@@ -52,7 +52,12 @@ def create(ships, zookeepers, name, httpport=9200, peerport=9300, jmxport=9400, 
             },
             ports=image.ports,
             extports={'http': httpport, 'peer': peerport, 'jmx': jmxport},
-            env={'JAVA_RMI_PORT': image.ports['jmx']},
+            env={
+                'JAVA_RMI_PORT': image.ports['jmx'],
+                'JAVA_RMI_SERVER_HOSTNAME': ship.fqdn,
+                'ES_HEAP_SIZE': ship.memory // 2,
+                'ES_JAVA_OPTS': '-XX:NewRatio=5',
+            },
             memory=ship.memory * 3 // 4,
         ) for ship in ships])
     return containers
