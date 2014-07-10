@@ -1,4 +1,4 @@
-from dominator.entities import *
+from dominator.entities import SourceImage, Image, DataVolume, ConfigVolume, TemplateFile, TextFile, Container
 
 
 def create(ships, zookeepers, name, httpport=9200, peerport=9300, jmxport=9400, marvel_hosts=[]):
@@ -8,7 +8,8 @@ def create(ships, zookeepers, name, httpport=9200, peerport=9300, jmxport=9400, 
         parent=Image('yandex/trusty'),
         scripts=[
             'curl http://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add -',
-            'echo "deb http://packages.elasticsearch.org/elasticsearch/1.2/debian stable main" > /etc/apt/sources.list.d/elasticsearch.list',
+            'echo "deb http://packages.elasticsearch.org/elasticsearch/1.2/debian stable main"'
+            ' > /etc/apt/sources.list.d/elasticsearch.list',
             'apt-get update',
             'apt-get install -y --no-install-recommends maven elasticsearch=1.2.1 openjdk-7-jdk',
             'git clone https://github.com/grmblfrz/elasticsearch-zookeeper.git /tmp/elasticsearch-zookeeper',
@@ -31,8 +32,11 @@ def create(ships, zookeepers, name, httpport=9200, peerport=9300, jmxport=9400, 
     config = ConfigVolume(
         dest=image.volumes['config'],
         files={
-            'elasticsearch.yml': TemplateFile(TextFile('elasticsearch.yml'),
-                name=name, zookeepers=zookeepers, containers=containers, marvel_hosts=marvel_hosts),
+            'elasticsearch.yml': TemplateFile(
+                TextFile('elasticsearch.yml'),
+                name=name, zookeepers=zookeepers,
+                containers=containers, marvel_hosts=marvel_hosts
+            ),
             'mapping.json': TextFile('mapping.json'),
             'logging.yml': TextFile('logging.yml'),
         },
