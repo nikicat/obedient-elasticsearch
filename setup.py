@@ -3,7 +3,7 @@ import setuptools
 if __name__ == '__main__':
     setuptools.setup(
         name='obedient.elasticsearch',
-        version='1.0',
+        version='1.1',
         url='https://github.com/yandex-sysmon/obedient-elasticsearch',
         license='GPLv3',
         author='Nikolay Bryskin',
