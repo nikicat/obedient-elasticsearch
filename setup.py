@@ -4,7 +4,7 @@ if __name__ == '__main__':
     setuptools.setup(
         name='obedient.elasticsearch',
         version='1.3',
-        url='https://github.com/yandex-sysmon/obedient-elasticsearch',
+        url='https://github.com/yandex-sysmon/obedient.elasticsearch',
         license='GPLv3',
         author='Nikolay Bryskin',
         author_email='devel.niks@gmail.com',
