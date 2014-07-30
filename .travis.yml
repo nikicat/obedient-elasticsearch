@@ -5,31 +5,9 @@ env:
   matrix:
   - TOXENV=flake8
   - TOXENV=pylint
-  global:
-    secure: 09bbh2CRijq0iTfGeToZuxOtdUiac9StijFvbMNRV7iyEBCeFCzbrTGonMACMV7TV2fxrfPSuYUsrWj6FcfHWU1EihLpMtb9NP5xd1PEdwgp5ZN5LOxUBuNsUZ4fqlWE6NGssSwds09y52R34Y5rxk+9lEnFzuj9IZA2gvPSglk=
 install:
 - pip install tox bumpversion
 script: tox -v
-before_deploy:
-- git checkout master
-- git config user.email "travisbot@travis-ci.org"
-- git config user.name "Travis-CI Bot"
-- (git log -1 --pretty=%B | grep 'Merge pull request') && bumpversion --verbose minor || true
-- git remote remove origin
-- git remote add origin git@github.com:yandex-sysmon/obedient-elasticsearch
-- openssl rsa -in .deploy.pem -passin env:DEPLOYKEYPASS >> ~/.ssh/id_rsa
-- chmod 0600 ~/.ssh/id_rsa
-- git push origin master
-- git push --tags --force
-deploy:
-  provider: pypi
-  user: nikicat
-  password:
-    secure: KiDIOLgfXw5erxw/SbNpvKskR5gqvmxI9Iez36EtplapKBU14YTRa6ucBK6onGLiOrjwJrRCZOh3NCYb5FK5uDIBu1emenHmRO3GQzRsgLv+AQ2fhAvRbj8b1pe4yF9HnGGGdMbtac/PNuwKA8nBthkAe3ALZuat0Dv+mGviKcc=
-  distributions: sdist
-  on:
-    condition: "$TOXENV = flake8"
-    repo: yandex-sysmon/obedient-elasticsearch
 notifications:
   hipchat:
     rooms:
