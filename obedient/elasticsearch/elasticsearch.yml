@@ -9,7 +9,7 @@ discovery:
     type: com.sonian.elasticsearch.zookeeper.discovery.ZooKeeperDiscoveryModule
 sonian.elasticsearch.zookeeper:
     settings.enabled: False
-    client.host: ${ ','.join(['{}:{}'.format(c.ship.fqdn, c.ports['client']) for c in zookeepers]) }
+    client.host: ${ ','.join(['{}:{}'.format(c.ship.fqdn, c.getport('client')) for c in zookeepers]) }
     discovery.state_publishing.enabled: True
 zookeeper.root: /${ name }/elasticsearch
 cluster.routing.allocation:
