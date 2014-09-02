@@ -13,7 +13,8 @@ def create(ships, zookeepers, name, httpport=9200, peerport=9300, jmxport=9400, 
             'apt-get update',
             'apt-get install -y --no-install-recommends maven elasticsearch=1.2.1 openjdk-7-jdk',
             'git clone https://github.com/grmblfrz/elasticsearch-zookeeper.git /tmp/elasticsearch-zookeeper',
-            'cd /tmp/elasticsearch-zookeeper && mvn package -Dmaven.test.skip=true -Dzookeeper.version=3.4.6',
+            'cd /tmp/elasticsearch-zookeeper && git checkout v1.2.0 && '
+            'mvn package -Dmaven.test.skip=true -Dzookeeper.version=3.4.6',
             '/usr/share/elasticsearch/bin/plugin -v '
             '  -u file:///tmp/elasticsearch-zookeeper/target/releases/elasticsearch-zookeeper-1.2.0.zip '
             '  -i elasticsearch-zookeeper-1.2.0',
