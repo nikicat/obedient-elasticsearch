@@ -5,7 +5,7 @@ def create(ships, zookeepers, name, httpport=9200, peerport=9300, jmxport=9400, 
     containers = []
     image = SourceImage(
         name='elasticsearch',
-        parent=Image('yandex/trusty'),
+        parent=Image(namespace='yandex', repository='trusty'),
         scripts=[
             'curl http://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add -',
             'echo "deb http://packages.elasticsearch.org/elasticsearch/1.2/debian stable main"'
