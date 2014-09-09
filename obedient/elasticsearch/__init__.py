@@ -1,4 +1,6 @@
-from dominator.entities import SourceImage, Image, DataVolume, ConfigVolume, TemplateFile, TextFile, Container
+from dominator.utils import resource_string
+from dominator.entities import (SourceImage, Image, DataVolume, ConfigVolume, TemplateFile,
+                                TextFile, Container, LogVolume, RotatedLogFile)
 
 
 def create(ships, zookeepers, name, httpport=9200, peerport=9300, jmxport=9400, marvel_hosts=[]):
@@ -27,7 +29,7 @@ def create(ships, zookeepers, name, httpport=9200, peerport=9300, jmxport=9400, 
             'data': '/var/lib/elasticsearch',
             'config': '/etc/elasticsearch'
         },
-        files={'/root/run.sh': 'run.sh'},
+        files={'/root/run.sh': resource_string('run.sh')},
         command='bash /root/run.sh',
     )
     config = ConfigVolume(
@@ -43,7 +45,12 @@ def create(ships, zookeepers, name, httpport=9200, peerport=9300, jmxport=9400, 
         },
     )
     data = DataVolume(image.volumes['data'])
-    logs = DataVolume(image.volumes['logs'])
+    logs = LogVolume(
+        image.volumes['logs'],
+        logs={
+            '{}.log'.format(name): RotatedLogFile('[%Y-%m-%d %H:%M:%S,%f]', 25)
+        },
+    )
 
     containers.extend([
         Container(
