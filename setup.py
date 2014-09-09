@@ -3,7 +3,7 @@ import setuptools
 if __name__ == '__main__':
     setuptools.setup(
         name='obedient.elasticsearch',
-        version='1.4',
+        version='1.4.0',
         url='https://github.com/yandex-sysmon/obedient.elasticsearch',
         license='LGPLv3',
         author='Nikolay Bryskin',
@@ -13,5 +13,5 @@ if __name__ == '__main__':
         packages=['obedient.elasticsearch'],
         namespace_packages=['obedient'],
         package_data={'obedient.elasticsearch': ['elasticsearch.yml', 'logging.yml', 'mapping.json', 'run.sh']},
-        install_requires=['dominator[full] >=7'],
+        install_requires=['dominator[full] >=8.1'],
     )
