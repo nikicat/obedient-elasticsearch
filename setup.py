@@ -18,6 +18,6 @@ if __name__ == '__main__':
         ]},
         install_requires=[
             'dominator[full] >=9',
-            'obedient.zookeeper',
+            'obedient.zookeeper >=1.5',
         ],
     )
