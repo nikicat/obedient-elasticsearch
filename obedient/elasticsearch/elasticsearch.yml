@@ -2,14 +2,14 @@ cluster.name: ${ name }
 node:
     name: ${ this.name }-${ this.ship.name }
     datacenter: ${ this.ship.datacenter }
-transport.tcp.port: ${ this.interfaces['peer'].port }
-http.port: ${ this.interfaces['http'].port }
+transport.tcp.port: ${ this.doors['peer'].port }
+http.port: ${ this.doors['http'].port }
 network.publish_host: ${ this.ship.fqdn }
 discovery:
     type: com.sonian.elasticsearch.zookeeper.discovery.ZooKeeperDiscoveryModule
 sonian.elasticsearch.zookeeper:
     settings.enabled: False
-    client.host: ${ ','.join(['{}:{}'.format(c.ship.fqdn, c.interfaces['client'].externalport) for c in zookeepers]) }
+    client.host: ${ ','.join(['{}:{}'.format(c.ship.fqdn, c.doors['client'].externalport) for c in zookeepers]) }
     discovery.state_publishing.enabled: True
 zookeeper.root: /${ name }/elasticsearch
 cluster.routing.allocation:

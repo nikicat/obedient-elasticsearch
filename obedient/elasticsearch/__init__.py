@@ -1,7 +1,7 @@
 from dominator.utils import resource_string
 from dominator.entities import (SourceImage, Image, DataVolume, ConfigVolume, TemplateFile,
                                 TextFile, Container, LogVolume, RotatedLogFile, LocalShip,
-                                Shipment, Interface)
+                                Shipment, Door)
 import obedient.zookeeper
 
 
@@ -65,8 +65,8 @@ def create(ships, zookeepers, name, ports=None, marvel_hosts=[]):
                 'logs': logs,
                 'config': config,
             },
-            interfaces={
-                'http': Interface(
+            doors={
+                'http': Door(
                     schema='http',
                     port=image.ports['http'],
                     externalport=ports.get('http'),
@@ -76,9 +76,9 @@ def create(ships, zookeepers, name, ports=None, marvel_hosts=[]):
                         '/_plugin/marvel/',
                     ],
                 ),
-                'peer': Interface(schema='elasticsearch-peer', port=image.ports['peer'],
-                                  externalport=ports.get('peer')),
-                'jmx': Interface(schema='rmi', port=image.ports['jmx'], externalport=ports.get('jxm')),
+                'peer': Door(schema='elasticsearch-peer', port=image.ports['peer'],
+                             externalport=ports.get('peer')),
+                'jmx': Door(schema='rmi', port=image.ports['jmx'], externalport=ports.get('jxm')),
             },
             env={
                 'JAVA_RMI_PORT': image.ports['jmx'],
@@ -92,10 +92,7 @@ def create(ships, zookeepers, name, ports=None, marvel_hosts=[]):
 
 
 def make_local():
-    return Shipment(
-        'local',
-        containers=create(
-            ships=[LocalShip()],
-            zookeepers=obedient.zookeeper.create(),
-        ),
-    )
+    ships = [LocalShip()]
+    zookeepers = obedient.zookeeper.create(ships=ships)
+    containers = create(ships=ships, zookeepers=zookeepers, name='local')
+    return Shipment(name='local', containers=containers)
