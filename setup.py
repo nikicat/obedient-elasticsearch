@@ -16,5 +16,8 @@ if __name__ == '__main__':
         entry_points={'obedient': [
             'local = obedient.elasticsearch:make_local',
         ]},
-        install_requires=['dominator[full] >=9'],
+        install_requires=[
+            'dominator[full] >=9',
+            'obedient.zookeeper',
+        ],
     )
