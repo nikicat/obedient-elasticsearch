@@ -1,9 +1,12 @@
 from dominator.utils import resource_string
 from dominator.entities import (SourceImage, Image, DataVolume, ConfigVolume, TemplateFile,
-                                TextFile, Container, LogVolume, RotatedLogFile)
+                                TextFile, Container, LogVolume, RotatedLogFile, LocalShip,
+                                Shipment, Interface)
+import obedient.zookeeper
 
 
-def create(ships, zookeepers, name, httpport=9200, peerport=9300, jmxport=9400, marvel_hosts=[]):
+def create(ships, zookeepers, name, ports=None, marvel_hosts=[]):
+    ports = ports or {}
     containers = []
     image = SourceImage(
         name='elasticsearch',
@@ -36,7 +39,7 @@ def create(ships, zookeepers, name, httpport=9200, peerport=9300, jmxport=9400, 
         dest=image.volumes['config'],
         files={
             'elasticsearch.yml': TemplateFile(
-                TextFile('elasticsearch.yml'),
+                resource_string('elasticsearch.yml'),
                 name=name, zookeepers=zookeepers,
                 containers=containers, marvel_hosts=marvel_hosts
             ),
@@ -47,7 +50,7 @@ def create(ships, zookeepers, name, httpport=9200, peerport=9300, jmxport=9400, 
     data = DataVolume(image.volumes['data'])
     logs = LogVolume(
         image.volumes['logs'],
-        logs={
+        files={
             '{}.log'.format(name): RotatedLogFile('[%Y-%m-%d %H:%M:%S,%f]', 25)
         },
     )
@@ -62,8 +65,21 @@ def create(ships, zookeepers, name, httpport=9200, peerport=9300, jmxport=9400, 
                 'logs': logs,
                 'config': config,
             },
-            ports=image.ports,
-            extports={'http': httpport, 'peer': peerport, 'jmx': jmxport},
+            interfaces={
+                'http': Interface(
+                    schema='http',
+                    port=image.ports['http'],
+                    externalport=ports.get('http'),
+                    paths=[
+                        '/',
+                        '/_plugin/head/',
+                        '/_plugin/marvel/',
+                    ],
+                ),
+                'peer': Interface(schema='elasticsearch-peer', port=image.ports['peer'],
+                                  externalport=ports.get('peer')),
+                'jmx': Interface(schema='rmi', port=image.ports['jmx'], externalport=ports.get('jxm')),
+            },
             env={
                 'JAVA_RMI_PORT': image.ports['jmx'],
                 'JAVA_RMI_SERVER_HOSTNAME': ship.fqdn,
@@ -73,3 +89,13 @@ def create(ships, zookeepers, name, httpport=9200, peerport=9300, jmxport=9400, 
             memory=ship.memory * 3 // 4,
         ) for ship in ships])
     return containers
+
+
+def make_local():
+    return Shipment(
+        'local',
+        containers=create(
+            ships=[LocalShip()],
+            zookeepers=obedient.zookeeper.create(),
+        ),
+    )
