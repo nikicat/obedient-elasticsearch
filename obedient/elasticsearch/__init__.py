@@ -13,16 +13,16 @@ def create(ships, zookeepers, name, ports=None, marvel_hosts=[]):
         parent=Image(namespace='yandex', repository='trusty'),
         scripts=[
             'curl http://packages.elasticsearch.org/GPG-KEY-elasticsearch | apt-key add -',
-            'echo "deb http://packages.elasticsearch.org/elasticsearch/1.2/debian stable main"'
+            'echo "deb http://packages.elasticsearch.org/elasticsearch/1.3/debian stable main"'
             ' > /etc/apt/sources.list.d/elasticsearch.list',
             'apt-get update',
-            'apt-get install -y --no-install-recommends maven elasticsearch=1.2.1 openjdk-7-jdk',
+            'apt-get install -y --no-install-recommends maven elasticsearch=1.3.2 openjdk-7-jdk',
             'git clone https://github.com/grmblfrz/elasticsearch-zookeeper.git /tmp/elasticsearch-zookeeper',
-            'cd /tmp/elasticsearch-zookeeper && git checkout v1.2.0 && '
+            'cd /tmp/elasticsearch-zookeeper && git checkout v1.3.1 && '
             'mvn package -Dmaven.test.skip=true -Dzookeeper.version=3.4.6',
             '/usr/share/elasticsearch/bin/plugin -v '
-            '  -u file:///tmp/elasticsearch-zookeeper/target/releases/elasticsearch-zookeeper-1.2.0.zip '
-            '  -i elasticsearch-zookeeper-1.2.0',
+            '  -u file:///tmp/elasticsearch-zookeeper/target/releases/elasticsearch-zookeeper-1.3.1.zip '
+            '  -i elasticsearch-zookeeper-1.3.1',
             '/usr/share/elasticsearch/bin/plugin -v -i elasticsearch/marvel/latest',
             '/usr/share/elasticsearch/bin/plugin -v -i mobz/elasticsearch-head',
         ],
@@ -43,8 +43,8 @@ def create(ships, zookeepers, name, ports=None, marvel_hosts=[]):
                 name=name, zookeepers=zookeepers,
                 containers=containers, marvel_hosts=marvel_hosts
             ),
-            'mapping.json': TextFile('mapping.json'),
-            'logging.yml': TextFile('logging.yml'),
+            'mapping.json': TextFile(filename='mapping.json'),
+            'logging.yml': TextFile(filename='logging.yml'),
         },
     )
     data = DataVolume(image.volumes['data'])
